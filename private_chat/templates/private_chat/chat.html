@@ -1,11 +1,26 @@
 {% extends "private_chat/base.html" %}
 {% block content %}
+    <style>
+        .scroll {
+            overflow-x: scroll;
+            overflow-y: scroll;
+        }
+        #message-div {
+            height: 150px;
+            width: 1000px;
+        }
+        #m {
+            width: 1000px;
+        }
+    </style>
     <p>Chats with {{ other_chatuser.get_username }}:</p>
-    <ul id="messages">
-        {% for message in chat_messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
+    <div id="message-div" class="scroll">
+        <ul id="messages">
+            {% for message in chat_messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     <input type="text" id="m">
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script>
@@ -13,19 +28,31 @@
         socket.onmessage = function (e) {
             console.log("got: "+ e.data);
             $("#messages").append($("<li>").text(e.data));
+            fix_scroll();
         };
-        $("#m").keyup(function (event){
+        function fix_scroll() {
+            var e = $("#message-div");
+            e.scrollTop(e.prop("scrollHeight"));
+        }
+        function on_message_keyup(event){
+            var message_input = $("#m");
             if (event.keyCode === 13) {
-                var message = $("#m").val();
+                var message = message_input.val();
                 console.log("sending: " + message);
                 socket.send(JSON.stringify({
                     "message": message,
                     "sender": "{{ chatuser.get_username }}",
                     "receiver": "{{ other_chatuser.get_username }}"
                 }));
-                $("#m").val("");
-                $("#m").focus();
+                message_input.val("");
+                message_input.focus();
             }
+        }
+        $(document).ready(function () {
+            var message_input = $("#m");
+            message_input.focus();
+            message_input.keyup(on_message_keyup);
+            fix_scroll();
         });
     </script>
 {% endblock %}
