@@ -1,7 +1,6 @@
 from django.views.generic import TemplateView
 from braces.views import LoginRequiredMixin
-
-from private_chat.models import ChatUser
+from django.contrib.auth.models import User
 
 
 class Index(TemplateView):
@@ -24,7 +23,7 @@ class Chat(LoginRequiredMixin, ChatTemplate, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Chat, self).get_context_data(**kwargs)
-        otheruser = ChatUser.objects.get(username=self.kwargs['username'])
+        otheruser = User.objects.get(username=self.kwargs['username']).chatuser
         context['other_chatuser'] = otheruser
         context['chat_messages'] = self.request.user.chatuser.messages(otheruser)
         return context
