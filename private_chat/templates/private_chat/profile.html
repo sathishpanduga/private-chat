@@ -1,13 +1,10 @@
 {% extends "private_chat/base.html" %}
 {% block content %}
-    <p>Hello, {{ user.get_username }}</p>
+    <p>Hello, {{ chatuser.get_username }}</p>
     <p>Contacts:</p>
     <ul>
-        {% for contact in user.contact_requested.all %}
-            <li>{{ contact.accepter.get_username }}</li>
-        {% endfor %}
-        {% for contact in user.contact_accepted.all %}
-            <li>{{ contact.requester.get_username }}</li>
+        {% for contact in chatuser.contacts %}
+            <li>{{ contact.get_username }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
