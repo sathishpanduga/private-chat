@@ -1,0 +1,9 @@
+{% extends "private_chat/base.html" %}
+{% block content %}
+    <p>Chats with {{ other_chatuser.get_username }}:</p>
+    <ul>
+        {% for message in chat_messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
