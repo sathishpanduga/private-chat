@@ -4,7 +4,7 @@
     <p>Contacts:</p>
     <ul>
         {% for contact in chatuser.contacts %}
-            <li>{{ contact.get_username }}</li>
+            <li><a href="{% url 'private-chat:chat' contact.get_username %}">{{ contact.get_username }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
