@@ -1,5 +1,5 @@
 from tornado_app import websockets
 
 urlpatterns = [
-    (r'/websocket', websockets.Echo),
+    (r'/websocket', websockets.MessageHandler),
 ]
