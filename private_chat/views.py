@@ -3,10 +3,6 @@ from braces.views import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 
-class Index(TemplateView):
-    template_name = "private_chat/index.html"
-
-
 class ChatTemplate:
     def get_context_data(self, **kwargs):
         context = super(ChatTemplate, self).get_context_data(**kwargs)
