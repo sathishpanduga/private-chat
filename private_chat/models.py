@@ -40,7 +40,7 @@ class Contact(models.Model):
 
 
 class ContactRequest(models.Model):
-    user = models.ForeignKey(ChatUser)
+    accepter = models.ForeignKey(ChatUser, related_name="contact_accepter")
     requester = models.ForeignKey(ChatUser, related_name="contact_requester")
     message = models.TextField(null=True, blank=True)
 
