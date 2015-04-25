@@ -2,21 +2,66 @@
 {% block content %}
     <p>Hello, {{ chatuser.get_username }}</p>
     <p>Contacts:</p>
-    <ul>
+    <ul id="contacts">
         {% for contact in chatuser.contacts %}
             <li><a href="{% url 'private-chat:chat' contact.get_username %}">{{ contact.get_username }}</a></li>
         {% endfor %}
     </ul>
     <p>Contacts pending:</p>
-    <ul>
+    <ul id="contacts-pending">
         {% for contact in chatuser.contact_accepter.all %}
-            <li>{{ contact.requester.get_username }}</li>
+            <li id="pending-{{ contact.requester.get_username }}">
+                <span>{{ contact.requester.get_username }}</span>
+                <a data-name="{{ contact.requester.get_username }}" class="accept-btn">Accept</a>
+            </li>
         {% endfor %}
     </ul>
     <p>Contacts requested:</p>
-    <ul>
+    <ul id="contacts-requested">
         {% for contact in chatuser.contact_requester.all %}
-            <li>{{ contact.accepter.get_username }}</li>
+            <li id="requested-{{ contact.accepter.get_username }}">{{ contact.accepter.get_username }}</li>
         {% endfor %}
     </ul>
+{% endblock %}
+{% block scripts %}
+    <script>
+        var context = {
+            username: "{{ chatuser.get_username }}",
+            chat_url: "{% url 'private-chat:chat' 'blah' %}"
+        };
+        function get_chat_url(username) {
+            return context.chat_url.replace('blah', username);
+        }
+        var socket = new WebSocket("ws://localhost:8888/contacts");
+        socket.onmessage = function (e) {
+            console.log("got: "+ e.data);
+            var data = JSON.parse(e.data);
+            var to_add;
+            if (data.accepter === context.username) {
+                to_add = data.requester;
+            } else if (data.requester === context.username) {
+                to_add = data.accepter;
+            }
+            if (to_add) {
+                $("#contacts").append(
+                    $("<li>").append(
+                        $("<a>")
+                        .attr("href", get_chat_url(to_add))
+                        .text(to_add)
+                    )
+                );
+            }
+        };
+        $(".accept-btn").click(function (){
+            var requester = this.getAttribute('data-name');
+            var accepter = context.username;
+            var message = JSON.stringify({
+                requester: requester,
+                accepter: accepter
+            });
+            console.log(message);
+            socket.send(message);
+            this.parentNode.remove();
+        })
+    </script>
 {% endblock %}
