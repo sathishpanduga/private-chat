@@ -30,5 +30,5 @@ class MessageHandler(Broadcaster):
 class ContactsHandler(Broadcaster):
     def on_message(self, message):
         print("got: "+message)
-        message = json.loads(message)
-        add_contact(**message)
+        add_contact(**json.loads(message))
+        self.broadcast(message)
