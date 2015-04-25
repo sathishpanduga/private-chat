@@ -7,4 +7,16 @@
             <li><a href="{% url 'private-chat:chat' contact.get_username %}">{{ contact.get_username }}</a></li>
         {% endfor %}
     </ul>
+    <p>People who want to become your contacts:</p>
+    <ul>
+        {% for contact in chatuser.contact_accepter.all %}
+            <li>{{ contact.requester.get_username }}</li>
+        {% endfor %}
+    </ul>
+    <p>People who you want to become your contacts:</p>
+    <ul>
+        {% for contact in chatuser.contact_requester.all %}
+            <li>{{ contact.accepter.get_username }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
