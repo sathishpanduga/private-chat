@@ -1,5 +1,5 @@
 {% extends "private_chat/base.html" %}
-{% block content %}
+{% block styles %}
     <style>
         .scroll {
             overflow-x: scroll;
@@ -13,6 +13,8 @@
             width: 1000px;
         }
     </style>
+{% endblock %}
+{% block content %}
     <p>Chats with {{ other_chatuser.get_username }}:</p>
     <div id="message-div" class="scroll">
         <ul id="messages">
@@ -22,6 +24,8 @@
         </ul>
     </div>
     <input type="text" id="m">
+{% endblock %}
+{% block scripts %}
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script>
         var socket = new WebSocket("ws://localhost:8888/websocket");
