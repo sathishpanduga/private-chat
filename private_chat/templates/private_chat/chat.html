@@ -28,7 +28,7 @@
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script>
-        var socket = new WebSocket("ws://localhost:8888/websocket");
+        var socket = new WebSocket("ws://localhost:8888/messages");
         socket.onmessage = function (e) {
             console.log("got: "+ e.data);
             $("#messages").append($("<li>").text(e.data));
