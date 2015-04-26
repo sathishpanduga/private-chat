@@ -27,11 +27,19 @@
 {% endblock %}
 {% block scripts %}
     <script>
+        var context = {
+            other_username: "{{ other_chatuser.get_username }}",
+            username: "{{ chatuser.get_username }}"
+        };
         var socket = new WebSocket("ws://localhost:8888/messages");
         socket.onmessage = function (e) {
             console.log("got: "+ e.data);
-            $("#messages").append($("<li>").text(e.data));
-            fix_scroll();
+            var message = JSON.parse(e.data);
+            if ((message.receiver === context.username && message.sender === context.other_username) ||
+               (message.receiver === context.other_username && message.sender === context.username)) {
+                $("#messages").append($("<li>").text(message.message));
+                fix_scroll();
+            }
         };
         function fix_scroll() {
             var e = $("#message-div");
@@ -44,8 +52,8 @@
                 console.log("sending: " + message);
                 socket.send(JSON.stringify({
                     "message": message,
-                    "sender": "{{ chatuser.get_username }}",
-                    "receiver": "{{ other_chatuser.get_username }}"
+                    "sender": context.username,
+                    "receiver": context.other_username
                 }));
                 message_input.val("");
                 message_input.focus();
