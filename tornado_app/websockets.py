@@ -22,9 +22,9 @@ class MessageHandler(Broadcaster):
         print("got: "+message)
         message = json.loads(message)
         created = add_message(**message)
-        self.broadcast("{0} [{1}]: {2}".format(
-            created.strftime('%H:%M:%S'), message["sender"], message["message"]
-        ))
+        message["message"] = "{0} [{1}]: {2}".format(
+            created.strftime('%H:%M:%S'), message["sender"], message["message"])
+        self.broadcast(json.dumps(message))
 
 
 class ContactsHandler(Broadcaster):
