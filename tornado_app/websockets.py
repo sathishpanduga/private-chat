@@ -16,6 +16,9 @@ class Broadcaster(tornado.websocket.WebSocketHandler):
         for client in self.clients:
             client.write_message(message)
 
+    def close(self):
+        print("closed")
+
 
 class MessageHandler(Broadcaster):
     def on_message(self, message):
@@ -28,6 +31,8 @@ class MessageHandler(Broadcaster):
 
 
 class ContactsHandler(Broadcaster):
+    clients = []
+
     def on_message(self, message):
         print("got: "+message)
         add_contact(**json.loads(message))
@@ -35,6 +40,8 @@ class ContactsHandler(Broadcaster):
 
 
 class ContactRequestsHandler(Broadcaster):
+    clients = []
+
     def on_message(self, message):
         print("got: "+message)
         add_contact_request(**json.loads(message))
