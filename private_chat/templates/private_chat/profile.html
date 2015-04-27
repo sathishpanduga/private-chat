@@ -35,8 +35,9 @@
         function get_chat_url(username) {
             return context.chat_url.replace('blah', username);
         }
-        var socket = new WebSocket("ws://localhost:8888/contacts");
-        socket.onmessage = function (e) {
+        var contacts_socket = new WebSocket("ws://localhost:8888/contacts");
+        var contact_requests_socket = new WebSocket("ws://localhost:8888/contactrequests");
+        contacts_socket.onmessage = function (e) {
             console.log("got: "+ e.data);
             var data = JSON.parse(e.data);
             var to_add;
@@ -63,8 +64,44 @@
                 accepter: accepter
             });
             console.log(message);
-            socket.send(message);
+            contacts_socket.send(message);
             this.parentNode.remove();
-        })
+        });
+        $("#contact-request-btn").click(function (){
+            var requester = context.username;
+            var accepter = $("#contact-username").val();
+            var message = JSON.stringify({
+                requester: requester,
+                accepter: accepter
+            });
+            console.log(message);
+            contact_requests_socket.send(message);
+        });
+        contacts_socket.onmessage = function (e) {
+            console.log("got: "+ e.data);
+            var data = JSON.parse(e.data);
+            if (data.accepter === context.username) {
+                $("#contacts-pending").append(
+                    $("<li>")
+                    .attr("id", "pending-"+data.requester)
+                    .append(
+                        $("<span>")
+                        .text(data.requester)
+                    )
+                    .append(
+                        $("<a>")
+                        .attr("data-name", data.requester)
+                        .addClass("accept-btn")
+                        .text("Accept")
+                    )
+                );
+            } else if (data.requester === context.username) {
+                $("#contacts-requested").append(
+                    $("<li>")
+                    .attr("id", "requested-"+data.accepter)
+                    .text(data.accepter)
+                );
+            }
+        };
     </script>
 {% endblock %}
