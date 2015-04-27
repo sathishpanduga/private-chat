@@ -77,7 +77,7 @@
             console.log(message);
             contact_requests_socket.send(message);
         });
-        contacts_socket.onmessage = function (e) {
+        contact_requests_socket.onmessage = function (e) {
             console.log("got: "+ e.data);
             var data = JSON.parse(e.data);
             if (data.accepter === context.username) {
