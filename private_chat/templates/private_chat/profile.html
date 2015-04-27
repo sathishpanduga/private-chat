@@ -22,6 +22,9 @@
             <li id="requested-{{ contact.accepter.get_username }}">{{ contact.accepter.get_username }}</li>
         {% endfor %}
     </ul>
+    <p>Request a contact:</p>
+    <input id="contact-username" type="text" placeholder="username">
+    <input id="contact-request-btn" type="button" value="Request">
 {% endblock %}
 {% block scripts %}
     <script>
