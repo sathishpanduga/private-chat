@@ -2,7 +2,7 @@ import json
 
 import tornado.websocket
 
-from tornado_app.models import add_message, add_contact
+from tornado_app.models import add_message, add_contact, add_contact_request
 
 
 class Broadcaster(tornado.websocket.WebSocketHandler):
@@ -31,4 +31,11 @@ class ContactsHandler(Broadcaster):
     def on_message(self, message):
         print("got: "+message)
         add_contact(**json.loads(message))
+        self.broadcast(message)
+
+
+class ContactRequestsHandler(Broadcaster):
+    def on_message(self, message):
+        print("got: "+message)
+        add_contact_request(**json.loads(message))
         self.broadcast(message)
