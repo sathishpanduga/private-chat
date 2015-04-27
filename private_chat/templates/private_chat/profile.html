@@ -56,7 +56,7 @@
                 );
             }
         };
-        $(".accept-btn").click(function (){
+        var on_click_accept = function (){
             var requester = this.getAttribute('data-name');
             var accepter = context.username;
             var message = JSON.stringify({
@@ -66,7 +66,8 @@
             console.log(message);
             contacts_socket.send(message);
             this.parentNode.remove();
-        });
+        };
+        $(".accept-btn").click(on_click_accept);
         $("#contact-request-btn").click(function (){
             var requester = context.username;
             var accepter = $("#contact-username").val();
@@ -92,7 +93,8 @@
                         $("<a>")
                         .attr("data-name", data.requester)
                         .addClass("accept-btn")
-                        .text("Accept")
+                        .text(" Accept")
+                        .click(on_click_accept)
                     )
                 );
             } else if (data.requester === context.username) {
