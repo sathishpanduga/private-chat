@@ -48,3 +48,18 @@ def add_contact(accepter, requester):
         }
     )
     conn.commit()
+
+
+def add_contact_request(requester, accepter):
+    accepter_id = get_user_id(accepter)
+    requester_id = get_user_id(requester)
+    print("{0}({1}) requested contact from {2}({3})".format(requester, requester_id, accepter, accepter_id))
+    conn.execute(
+        "INSERT INTO private_chat_contactrequest (accepter_id, requester_id)"
+        " VALUES (:accepter_id, :requester_id)",
+        {
+            "accepter_id": accepter_id,
+            "requester_id": requester_id,
+        }
+    )
+    conn.commit()
