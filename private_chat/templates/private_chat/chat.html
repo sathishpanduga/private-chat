@@ -15,7 +15,7 @@
     </style>
 {% endblock %}
 {% block content %}
-    <p>Chats with {{ other_chatuser.get_username }}:</p>
+    <p>Chats between <a href="{% url 'private-chat:profile' %}">you</a> and {{ other_chatuser.get_username }}:</p>
     <div id="message-div" class="scroll">
         <ul id="messages">
             {% for message in chat_messages %}
