@@ -43,8 +43,10 @@
             var to_add;
             if (data.accepter === context.username) {
                 to_add = data.requester;
+                $("#pending-"+to_add).remove();
             } else if (data.requester === context.username) {
                 to_add = data.accepter;
+                $("#requested-"+to_add).remove();
             }
             if (to_add) {
                 $("#contacts").append(
