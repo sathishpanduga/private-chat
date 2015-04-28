@@ -11,7 +11,7 @@ clients = defaultdict(list)
 
 class Broadcaster(tornado.websocket.WebSocketHandler):
     def open(self):
-        print("open")
+        print(self.name+" open")
         clients[self.name].append(self)
 
     def broadcast(self, message):
