@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url('^chats/(?P<username>.*?)/$', views.Chat.as_view(), name='chat'),
     url('^login/$', 'django.contrib.auth.views.login', kwargs={'template_name': 'private_chat/login.html'},
         name='login'),
+    url('^logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
 )
