@@ -17,10 +17,13 @@ class Broadcaster(tornado.websocket.WebSocketHandler):
             client.write_message(message)
 
     def close(self):
+        self.clients.remove(self)
         print("closed")
 
 
 class MessageHandler(Broadcaster):
+    clients = []
+
     def on_message(self, message):
         print("got: "+message)
         message = json.loads(message)
