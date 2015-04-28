@@ -1,28 +1,31 @@
 import json
+from collections import defaultdict
 
 import tornado.websocket
 
 from tornado_app.models import add_message, add_contact, add_contact_request
 
 
-class Broadcaster(tornado.websocket.WebSocketHandler):
-    clients = []
+clients = defaultdict(list)
 
+
+class Broadcaster(tornado.websocket.WebSocketHandler):
     def open(self):
-        print(type(self))
-        self.clients.append(self)
+        print("open")
+        clients[self.name].append(self)
 
     def broadcast(self, message):
-        for client in self.clients:
+        clients[self.name] = [client for client in clients[self.name] if client.ws_connection is not None]
+        for client in clients[self.name]:
             client.write_message(message)
 
     def close(self):
-        self.clients.remove(self)
+        clients[self.name].remove(self)
         print("closed")
 
 
 class MessageHandler(Broadcaster):
-    clients = []
+    name = "messages"
 
     def on_message(self, message):
         print("got: "+message)
@@ -34,7 +37,7 @@ class MessageHandler(Broadcaster):
 
 
 class ContactsHandler(Broadcaster):
-    clients = []
+    name = "contacts"
 
     def on_message(self, message):
         print("got: "+message)
@@ -43,7 +46,7 @@ class ContactsHandler(Broadcaster):
 
 
 class ContactRequestsHandler(Broadcaster):
-    clients = []
+    name = "contactrequests"
 
     def on_message(self, message):
         print("got: "+message)
