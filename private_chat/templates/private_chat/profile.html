@@ -1,6 +1,6 @@
 {% extends "private_chat/base.html" %}
 {% block content %}
-    <p>Hello, {{ chatuser.get_username }}</p>
+    <p>Hello, {{ chatuser.get_username }} (<a href="{% url 'private-chat:logout' %}">Logout</a>)</p>
     <p>Contacts:</p>
     <ul id="contacts">
         {% for contact in chatuser.contacts %}
